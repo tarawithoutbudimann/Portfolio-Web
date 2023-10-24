@@ -1,105 +1,88 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginRegisterController extends Controller
 {
-    public function __construct()
+
+    public function __construct(){
+        $this->middleware('guest')->except (
+            ['logout', 'dashboard']
+        );
+    }
+    //hanya logout dan dashboard yang dapat diakses setelah login
+    
+    public function register()
     {
-        // Middleware 'guest' memastikan hanya pengguna tamu yang dapat mengakses metode tertentu.
-        // Metode 'logout' dan 'dashboard' dapat diakses bahkan jika pengguna sudah masuk.
-        $this->middleware('guest')->except([
-            'logout', 'dashboard'
-        ]);
-    }
-
-    // Metode untuk menampilkan halaman registrasi
-    public function register(){
         return view('auth.register');
-    }
-
-    // Metode untuk memproses formulir registrasi
-    public function store(Request $request){
-
+    }  
+    
+    public function store(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+            'email' => 'required|max:255|email:dns|unique:users',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        $user = new User([
-            'name' => $request->name, 
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email, 
+            'password' => Hash::make($request->password),
         ]);
-$user->save();
-        //Membuat pengguna baru
 
-        //Percobaan untuk melakukan login setelah registrasi berhasil
-        $credentials = $request->only('email', 'password');
-        Auth::attempt($credentials);
-        $request->session()->regenerate();
-
-        //Mengarahkan ke halaman dashboard dengan pesan sukses
+        $credentials = $request->only('email', 'password'); //mengambil email dan password dari form
+        Auth::attempt($credentials); //mencoba login dengan email dan password yang diambil dari form
+        $request->session()->regenerate(); //mengatur ulang session
         return redirect()->route('dashboard')
-            ->withSucces('You Have Sucessfully Registered & Logged In !');
+        ->withSuccess('You have successfully registered & logged in!'); //redirect ke halaman dashboard
     }
 
-    //Metode untuk menampilkan halaman login
     public function login(){
         return view('auth.login');
     }
 
-    //Metode untuk memproses formulir login
-    public function authenticate(Request $request){
-        //Validasi input dari formulir login
+    public function authenticate(Request $request)
+    {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'email' => 'required|email:dns',
+            'password' => 'required',
         ]);
-
-        //Percobaan untuk melakukan autentikasi pengguna
-        if (Auth::attempt($credentials)){
+        
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->route('dashboard')
-                -> withSuccess ('You Have Successfully Logged In!');
+            ->withSuccess('You have successfully logged in!');
         }
 
-        //Jika autentikasi gagal, akan kembali ke halaman login dengan pesan kesalahan
         return back()->withErrors([
-            'email'=> 'Your Provided Credentials Do Not Match With Our Records',
+            'email' => 'Your provided credentials do not match our records.',
         ])->onlyInput('email');
     }
 
-    //Metode untuk menampilkan halaman dashboard
     public function dashboard(){
-
-        //Memeriksa apakah pengguna sudah masuk
-        if (Auth::check()){
-            return view('auth.dashboard');
-        }
-
-        //Jika pengguna belum masuk dapat kembali ke halaman login dengan pesan kesalahan
-        return redirect()->route('login')
-        ->withErrors([
-            'email'=>'Please Login To Access The Dashboard.',
-        ])->onlyInput('email');
+    if (Auth::check()) {
+        return view('auth.dashboard');
     }
 
-    //Metode untuk melakukan logout
+    return redirect()->route('login')
+    ->withErrors([
+        'email' => 'Please login to access this page.',
+    ])->onlyInput('email');
+    
+}
+
     public function logout(Request $request){
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        //Mengalihkan ke halaman login dengan pesan sukses
         return redirect()->route('login')
-        -> withSuccess('You Have Logged Out Successfully!');;
+        ->withSuccess('You have successfully logged out!');
     }
 }
-
