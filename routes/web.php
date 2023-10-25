@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SendEmailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 /*
@@ -28,3 +29,4 @@ Route::get('/login', [LoginRegisterController::class, 'login'])->name('login');
 Route::post('/authenticate', [LoginRegisterController::class, 'authenticate'])->name('authenticate');
 Route::get('/dashboard', [LoginRegisterController::class, 'dashboard'])->name('dashboard');
 Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
+Route::get('/sendemail', [SendEmailController::class,'index'])->name('sendemail');
