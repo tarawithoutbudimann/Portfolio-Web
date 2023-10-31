@@ -30,3 +30,4 @@ Route::post('/authenticate', [LoginRegisterController::class, 'authenticate'])->
 Route::get('/dashboard', [LoginRegisterController::class, 'dashboard'])->name('dashboard');
 Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
 Route::get('/sendemail', [SendEmailController::class,'index'])->name('sendemail');
+Route::post('/post-email', [SendEmailController::class, 'store'])->name('post-email');

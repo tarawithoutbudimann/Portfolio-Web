@@ -19,7 +19,16 @@ class SendEmail extends Mailable
     }
     public function build()
     {
-        return $this->subject($this->data['subject'])
-            ->view('emails.sendemail');
+        return $this->subject($this->data['subject'])->view('emails.sendemail');
     }
-}
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
+    }
+}      

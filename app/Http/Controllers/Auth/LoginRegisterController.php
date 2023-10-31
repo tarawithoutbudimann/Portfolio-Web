@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\SendMailJob;
 
 class LoginRegisterController extends Controller
 {
@@ -37,9 +38,20 @@ class LoginRegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => "Welcome to Tara Portfolio Website",
+            'body' => "Thanks for visiting my portfolio website."
+        ];
+        
+
+
         $credentials = $request->only('email', 'password'); //mengambil email dan password dari form
         Auth::attempt($credentials); //mencoba login dengan email dan password yang diambil dari form
         $request->session()->regenerate(); //mengatur ulang session
+
+        dispatch(new SendMailJob($data));
         return redirect()->route('dashboard')
         ->withSuccess('You have successfully registered & logged in!'); //redirect ke halaman dashboard
     }
