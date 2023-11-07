@@ -23,6 +23,19 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
+            
+            <div class="mb-3 row justify-content-center">
+                <div class="col-md-7 col-form-label text-start">
+                    <div class="col">
+                        <label for="photo" class="mb-2">Photo</label>
+                        <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo"
+                            name="photo" value="{{ old('photo') }}">
+                        @if ($errors->has('photo'))
+                        <span class="text-danger">{{ $errors->first('photo') }}</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
 
             <div class="mb-4">
                 <label for="password" class="block text-gray-700">Password</label>

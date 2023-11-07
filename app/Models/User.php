@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
     // app\Models\User.php
 
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password', 'photo'];
     protected $table = 'users';
 
 
