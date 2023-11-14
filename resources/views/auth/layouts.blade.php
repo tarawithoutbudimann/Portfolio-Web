@@ -25,6 +25,9 @@
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->is('gallery')) ? 'active' : '' }}" href="{{route('gallery.index') }}">Gallery</a>
+                        </li>
                         <li><a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();"

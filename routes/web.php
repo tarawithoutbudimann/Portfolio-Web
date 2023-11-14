@@ -4,6 +4,7 @@ use App\Http\Controllers\SendEmailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GalleryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,3 +40,4 @@ Route::get('/dashboard', [LoginRegisterController::class, 'dashboard'])->name('d
 Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
 Route::get('/sendemail', [SendEmailController::class,'index'])->name('sendemail');
 Route::post('/post-email', [SendEmailController::class, 'store'])->name('post-email');
+Route::resource('gallery', GalleryController::class);
