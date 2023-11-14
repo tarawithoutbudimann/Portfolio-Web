@@ -4,7 +4,7 @@ use App\Http\Controllers\SendEmailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\GalleryControllerr;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,6 +38,15 @@ Route::get('/login', [LoginRegisterController::class, 'login'])->name('login');
 Route::post('/authenticate', [LoginRegisterController::class, 'authenticate'])->name('authenticate');
 Route::get('/dashboard', [LoginRegisterController::class, 'dashboard'])->name('dashboard');
 Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
+
 Route::get('/sendemail', [SendEmailController::class,'index'])->name('sendemail');
 Route::post('/post-email', [SendEmailController::class, 'store'])->name('post-email');
-Route::resource('gallery', GalleryController::class);
+
+Route::controller(GalleryControllerr::class)->group(function() {
+    Route::resource('gallery', GalleryControllerr::class);
+    Route::get('/create', 'create')->name('create');
+    Route::get('/store', 'store')->name('store');
+    Route::delete('delete/{id}', 'destroy')->name('destroy');
+    Route::get('edit/{id}', 'edit')->name('edit');
+    Route::patch('update/{id}', 'update')->name('update'); 
+});
