@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GalleryControllerr;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,3 +51,5 @@ Route::controller(GalleryControllerr::class)->group(function() {
     Route::get('edit/{id}', 'edit')->name('edit');
     Route::patch('update/{id}', 'update')->name('update'); 
 });
+
+
