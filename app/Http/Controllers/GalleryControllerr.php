@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use App\Models\Post;
+use Illuminate\Support\Facades\Http;
 
 class GalleryControllerr extends Controller
 {
@@ -19,15 +20,18 @@ class GalleryControllerr extends Controller
      {
          $this->middleware('auth');
      }
+
     public function index()
     {
+        $gallery = Http::get(env("API_URL")."gallery")["data"];
+
         $data = array(
             'id' => "posts",
             'menu' => 'Gallery',
-            'galleries' => Post::where('picture', '!=',
-           '')->whereNotNull('picture')->orderBy('created_at', 'desc')->paginate(30)
-            );
-            return view('gallery.index')->with($data);
+            'galleries' => $gallery
+        );
+
+        return view('gallery.index')->with($data);
     }
 
     /**
@@ -78,7 +82,7 @@ class GalleryControllerr extends Controller
         $post->description = $request->input('description');
         $post->save();
     
-        return redirect('gallery')->with('success', 'Berhasil menambahkan data baru');
+        return redirect()->route('gallery.web')->with('success', 'Berhasil menambahkan data baru');
      }
 
     /**

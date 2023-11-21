@@ -44,12 +44,12 @@ Route::get('/sendemail', [SendEmailController::class,'index'])->name('sendemail'
 Route::post('/post-email', [SendEmailController::class, 'store'])->name('post-email');
 
 Route::controller(GalleryControllerr::class)->group(function() {
-    Route::resource('gallery', GalleryControllerr::class);
-    Route::get('/create', 'create')->name('create');
-    Route::get('/store', 'store')->name('store');
-    Route::delete('delete/{id}', 'destroy')->name('destroy');
-    Route::get('edit/{id}', 'edit')->name('edit');
-    Route::patch('update/{id}', 'update')->name('update'); 
+    Route::get('gallery', 'index')->name('gallery.web');
+    Route::get('/create', 'create')->name('gallery.create');
+    Route::get('/store', 'store')->name('gallery.store1');
+    Route::delete('delete/{id}', 'destroy')->name('gallery.destroy');
+    Route::get('edit/{id}', 'edit')->name('gallery.edit');
+    Route::patch('update/{id}', 'update')->name('gallery.update'); 
 });
 
 
