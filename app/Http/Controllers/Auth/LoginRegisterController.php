@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use App\Jobs\SendMailJob;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 
 class LoginRegisterController extends Controller
 {
@@ -52,7 +53,7 @@ class LoginRegisterController extends Controller
         Auth::attempt($credentials); //mencoba login dengan email dan password yang diambil dari form
         $request->session()->regenerate(); //mengatur ulang session
 
-        dispatch(new SendMailJob($data));
+        Mail::to($data['email'])->send(new SendEmail($data)); 
         return redirect()->route('dashboard')
         ->withSuccess('You have successfully registered & logged in!'); //redirect ke halaman dashboard
     }
